@@ -90,7 +90,7 @@ const App: React.FC = () => {
         <div className="flex-1 flex flex-col items-center justify-center w-full max-w-6xl mx-auto px-8">
           <div className="text-center mb-16 animate-fade-in-down">
             <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-purple-600 mb-4">
-              今晚，想怎么玩？
+              包子殿下，请翻牌
             </h2>
             <p className="text-xl text-slate-500">选择一个模式，开启属于你们的浪漫时刻</p>
             {isOffline && (
