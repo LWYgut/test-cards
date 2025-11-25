@@ -5,8 +5,8 @@ import { generateCard } from './services/geminiService';
 import Card from './components/Card';
 import NavBar from './components/NavBar';
 
-// Check for API key at app level
-const hasApiKey = !!process.env.API_KEY;
+// Check if running in offline mode
+const isOffline = !process.env.API_KEY;
 
 const App: React.FC = () => {
   const [currentMode, setCurrentMode] = useState<GameMode | null>(null);
@@ -81,18 +81,6 @@ const App: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [currentMode, isFlipped, loading, cardContent]);
 
-
-  if (!hasApiKey) {
-    return (
-      <div className="flex h-screen w-screen items-center justify-center p-8 bg-rose-50 text-center">
-        <div>
-           <h1 className="text-2xl font-bold text-rose-600 mb-4">需要 API Key</h1>
-           <p className="text-slate-600">请在源代码中配置 Google Gemini API Key 才能开始游戏。</p>
-        </div>
-      </div>
-    );
-  }
-
   // --- Home Screen (Desktop Mode Selection) ---
   if (!currentMode) {
     return (
@@ -105,6 +93,11 @@ const App: React.FC = () => {
               今晚，想怎么玩？
             </h2>
             <p className="text-xl text-slate-500">选择一个模式，开启属于你们的浪漫时刻</p>
+            {isOffline && (
+              <span className="inline-block mt-4 px-3 py-1 bg-slate-100 text-slate-400 text-xs rounded-full border border-slate-200">
+                离线模式 - 使用精选内置题库
+              </span>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">

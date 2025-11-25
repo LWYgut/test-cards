@@ -1,13 +1,18 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { GameMode, GameCardContent, CardType } from "../types";
+import { OFFLINE_CONTENT } from "../constants";
 
 // Ensure API Key exists
 const apiKey = process.env.API_KEY;
-if (!apiKey) {
-  console.error("API_KEY is missing from environment variables.");
-}
 
-const ai = new GoogleGenAI({ apiKey: apiKey || "" });
+let ai: GoogleGenAI | null = null;
+if (apiKey) {
+  try {
+    ai = new GoogleGenAI({ apiKey: apiKey });
+  } catch (e) {
+    console.warn("Failed to initialize GoogleGenAI", e);
+  }
+}
 
 const responseSchema: Schema = {
   type: Type.OBJECT,
@@ -33,18 +38,22 @@ const responseSchema: Schema = {
   required: ["type", "text", "emoji"],
 };
 
-export const generateCard = async (mode: GameMode): Promise<GameCardContent> => {
-  try {
-    // Fallback if no key provided (for demo purposes if env is missing)
-    if (!apiKey) {
-      return {
-        type: CardType.TRUTH,
-        text: "API Key未配置。请检查环境变量。",
-        emoji: "⚠️",
-        instruction: "系统错误"
-      };
-    }
+// Helper to get random offline content
+const getOfflineCard = (mode: GameMode): GameCardContent => {
+  const pool = OFFLINE_CONTENT[mode];
+  const randomIndex = Math.floor(Math.random() * pool.length);
+  return pool[randomIndex];
+};
 
+export const generateCard = async (mode: GameMode): Promise<GameCardContent> => {
+  // If no API key or AI init failed, use offline content immediately
+  if (!apiKey || !ai) {
+    // Simulate a small network delay for realism
+    await new Promise(resolve => setTimeout(resolve, 600)); 
+    return getOfflineCard(mode);
+  }
+
+  try {
     const promptMap = {
       [GameMode.SWEET]: "生成一个适合情侣的'甜蜜'互动卡片。可以是关于美好回忆的真心话，或者温馨的小互动（大冒险）。内容要可爱、轻松。",
       [GameMode.DEEP]: "生成一个适合情侣的'深度'交流卡片。关于未来、价值观、或者感情深处的问题。目的是增进理解。",
@@ -60,7 +69,7 @@ export const generateCard = async (mode: GameMode): Promise<GameCardContent> => 
         responseMimeType: "application/json",
         responseSchema: responseSchema,
         systemInstruction: "You are a romantic relationship expert creating a card game for couples. Your tone is fun, encouraging, and supportive.",
-        temperature: 1.0, // High temperature for variety
+        temperature: 1.0, 
       },
     });
 
@@ -71,13 +80,8 @@ export const generateCard = async (mode: GameMode): Promise<GameCardContent> => 
 
     throw new Error("No response text");
   } catch (error) {
-    console.error("Gemini API Error:", error);
+    console.error("Gemini API Error (Using Fallback):", error);
     // Fallback content in case of error
-    return {
-      type: CardType.TRUTH,
-      text: "你最喜欢我身体的哪个部位？为什么？",
-      emoji: "🤔",
-      instruction: "诚实回答"
-    };
+    return getOfflineCard(mode);
   }
 };
