@@ -7,16 +7,16 @@ interface NavBarProps {
 
 const NavBar: React.FC<NavBarProps> = ({ onBack }) => {
   return (
-    <div className="fixed top-0 left-0 w-full z-50 px-6 py-4 flex items-center justify-between bg-white/60 backdrop-blur-md shadow-sm">
+    <div className="fixed top-0 left-0 w-full z-50 px-4 md:px-6 py-3 md:py-4 flex items-center justify-between bg-white/70 backdrop-blur-md shadow-sm">
       <div className="flex items-center gap-2">
         {onBack && (
-          <button onClick={onBack} className="mr-2 p-1 rounded-full hover:bg-slate-100 transition-colors">
+          <button onClick={onBack} className="mr-1 p-1 rounded-full hover:bg-slate-100 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5 text-slate-600">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
             </svg>
           </button>
         )}
-        <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-rose-500 to-purple-600">
+        <h1 className="text-lg md:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-rose-500 to-purple-600">
           {APP_NAME}
         </h1>
       </div>
