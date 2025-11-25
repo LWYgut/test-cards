@@ -1,0 +1,22 @@
+{
+  "short_name": "🩷包子🩵",
+  "name": "🩷包子🩵 - 恋人卡牌",
+  "description": "专属于我们的情侣互动游戏",
+  "icons": [
+    {
+      "src": "https://ui-avatars.com/api/?name=LS&background=f43f5e&color=fff&size=192&rounded=true&font-size=0.5",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://ui-avatars.com/api/?name=LS&background=f43f5e&color=fff&size=512&rounded=true&font-size=0.5",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#fff1f2",
+  "background_color": "#fff1f2",
+  "orientation": "portrait"
+}
